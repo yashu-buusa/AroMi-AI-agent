@@ -1,0 +1,97 @@
+import { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { motion } from "framer-motion";
+
+export default function AroMiApp() {
+  const [messages, setMessages] = useState([
+    { role: "assistant", text: "Hi, I’m AroMi 🌿 Your adaptive health & wellness coach. How are you feeling today?" }
+  ]);
+  const [input, setInput] = useState("");
+
+  const handleSend = () => {
+    if (!input.trim()) return;
+    const userMsg = { role: "user", text: input };
+
+    const aiReply = {
+      role: "assistant",
+      text: generateAIResponse(input)
+    };
+
+    setMessages([...messages, userMsg, aiReply]);
+    setInput("");
+  };
+
+  const generateAIResponse = (text) => {
+    const t = text.toLowerCase();
+    if (t.includes("stress") || t.includes("anxious")) {
+      return "I hear you 💙 Try a 2‑minute breathing exercise. Inhale for 4s, hold 4s, exhale 6s. Want me to guide you?";
+    }
+    if (t.includes("tired") || t.includes("sleep")) {
+      return "Rest matters 😴 Try limiting screen time tonight and aim for a consistent bedtime. Want a sleep routine?";
+    }
+    if (t.includes("workout") || t.includes("exercise")) {
+      return "Let’s move 💪 A 15‑minute light workout could boost your energy today. Cardio or stretching?";
+    }
+    return "Thanks for sharing 🌱 I’m learning about you. Tell me more about your day or your health goals.";
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex flex-col items-center p-6">
+      <motion.h1
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="text-3xl font-bold mb-4"
+      >
+        AroMi – Adaptive AI Wellness Coach
+      </motion.h1>
+
+      <Card className="w-full max-w-2xl shadow-xl rounded-2xl">
+        <CardContent className="p-4 h-[420px] overflow-y-auto space-y-3">
+          {messages.map((msg, i) => (
+            <div
+              key={i}
+              className={`p-3 rounded-xl max-w-[80%] ${
+                msg.role === "assistant"
+                  ? "bg-green-100 text-left"
+                  : "bg-blue-100 ml-auto text-right"
+              }`}
+            >
+              {msg.text}
+            </div>
+          ))}
+        </CardContent>
+      </Card>
+
+      <div className="flex w-full max-w-2xl mt-4 gap-2">
+        <Input
+          placeholder="Talk to AroMi about your health, mood, sleep…"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && handleSend()}
+        />
+        <Button onClick={handleSend}>Send</Button>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8 max-w-4xl w-full">
+        <Feature title="Mental Wellness" desc="Mood tracking, stress detection, mindfulness guidance." />
+        <Feature title="Fitness Coach" desc="Adaptive workouts based on energy & habits." />
+        <Feature title="Sleep & Nutrition" desc="Smart sleep routines and meal suggestions." />
+      </div>
+    </div>
+  );
+}
+
+function Feature({ title, desc }) {
+  return (
+    <motion.div whileHover={{ scale: 1.05 }}>
+      <Card className="rounded-2xl shadow-md">
+        <CardContent className="p-4">
+          <h3 className="font-semibold text-lg mb-2">{title}</h3>
+          <p className="text-sm text-gray-600">{desc}</p>
+        </CardContent>
+      </Card>
+    </motion.div>
+  );
+}

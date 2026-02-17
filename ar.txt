@@ -1,0 +1,38 @@
+from fastapi import FastAPI
+from pydantic import BaseModel
+from agent import generate_coach_response
+
+app = FastAPI(title="AroMi AI Coach")
+
+class ChatRequest(BaseModel):
+    message: str
+    user_data: dict = {}
+
+@app.post("/chat")
+async def chat(req: ChatRequest):
+    reply = generate_coach_response(req.message, req.user_data)
+    return {"reply": reply}
+
+
+@app.get("/workout-plan")
+async def workout():
+    return {
+        "plan": [
+            "Push-ups – 3x12",
+            "Squats – 3x15",
+            "Plank – 60s",
+            "Jogging – 10 min"
+        ]
+    }
+
+
+@app.get("/nutrition-plan")
+async def nutrition():
+    return {
+        "plan": [
+            "Breakfast: Oats + Eggs",
+            "Lunch: Rice + Chicken",
+            "Snack: Fruits",
+            "Dinner: Salad + Protein"
+        ]
+    }

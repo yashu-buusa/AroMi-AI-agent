@@ -1,0 +1,78 @@
+# Aromi AI Agent - Adaptive Health & Wellness Coach
+# Educational / Non-medical use only
+
+class AromiAgent:
+    def __init__(self, name="Aromi"):
+        self.name = name
+        self.user_profile = {
+            "sleep_hours": [],
+            "mood": [],
+            "stress_level": [],
+            "water_intake": []
+        }
+
+    def check_in(self, sleep, mood, stress, water):
+        self.user_profile["sleep_hours"].append(sleep)
+        self.user_profile["mood"].append(mood)
+        self.user_profile["stress_level"].append(stress)
+        self.user_profile["water_intake"].append(water)
+
+        return self.generate_feedback(sleep, mood, stress, water)
+
+    def generate_feedback(self, sleep, mood, stress, water):
+        advice = []
+
+        # Sleep analysis
+        if sleep < 6:
+            advice.append("Try to get at least 7–8 hours of sleep tonight 🌙")
+        else:
+            advice.append("Great job maintaining healthy sleep habits 😴")
+
+        # Mood analysis
+        if mood <= 4:
+            advice.append("A short walk or calming music might help lift your mood 🎵")
+        else:
+            advice.append("Love the positive mood! Keep doing what works 💫")
+
+        # Stress analysis
+        if stress >= 7:
+            advice.append("You seem stressed. Try deep breathing for 5 minutes 🧘")
+        else:
+            advice.append("Your stress levels look manageable 👍")
+
+        # Hydration analysis
+        if water < 6:
+            advice.append("Drink more water today 💧 Your body will thank you!")
+        else:
+            advice.append("Nice hydration habits! 🚰")
+
+        return advice
+
+    def weekly_summary(self):
+        avg_sleep = sum(self.user_profile["sleep_hours"]) / len(self.user_profile["sleep_hours"])
+        avg_stress = sum(self.user_profile["stress_level"]) / len(self.user_profile["stress_level"])
+
+        return {
+            "average_sleep": round(avg_sleep, 1),
+            "average_stress": round(avg_stress, 1),
+            "message": "Small daily habits create big wellness changes 🌱"
+        }
+
+
+# ------------------ Example Usage ------------------
+
+aromi = AromiAgent()
+
+feedback = aromi.check_in(
+    sleep=5,
+    mood=4,
+    stress=8,
+    water=4
+)
+
+print("Aromi's Advice:")
+for tip in feedback:
+    print("-", tip)
+
+print("\nWeekly Summary:")
+print(aromi.weekly_summary())
